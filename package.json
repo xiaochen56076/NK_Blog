@@ -11,6 +11,8 @@
     "astro": "astro",
     "type-check": "tsc --noEmit --isolatedDeclarations",
     "new-post": "node scripts/new-post.js",
+		"sync-avatar": "node scripts/sync-avatar.mjs",
+		"doc:word": "node scripts/md-to-docx.mjs docs/汉化与配置说明.md",
     "format": "biome format --write ./src",
     "lint": "biome check --write ./src",
     "preinstall": "npx only-allow pnpm"

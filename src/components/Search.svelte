@@ -13,21 +13,21 @@ let isSearching = false;
 let pagefindLoaded = false;
 let initialized = false;
 
+// 仅在 dev 模式下显示的模拟结果（pagefind 索引只在构建时生成）
 const fakeResult: SearchResult[] = [
 	{
 		url: url("/"),
 		meta: {
-			title: "This Is a Fake Search Result",
+			title: "这是一条模拟的搜索结果",
 		},
-		excerpt:
-			"Because the search cannot work in the <mark>dev</mark> environment.",
+		excerpt: "因为搜索功能在 <mark>dev</mark> 开发环境下无法工作。",
 	},
 	{
 		url: url("/"),
 		meta: {
-			title: "If You Want to Test the Search",
+			title: "如果你想测试真实的搜索",
 		},
-		excerpt: "Try running <mark>npm build && npm preview</mark> instead.",
+		excerpt: "请改用 <mark>pnpm build && pnpm preview</mark> 查看效果。",
 	},
 ];
 
@@ -166,7 +166,7 @@ top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
       dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10
   ">
         <Icon icon="material-symbols:search" class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
-        <input placeholder="Search" bind:value={keywordMobile}
+        <input placeholder="{i18n(I18nKey.search)}" bind:value={keywordMobile}
                class="pl-10 absolute inset-0 text-sm bg-transparent outline-0
                focus:w-60 text-black/50 dark:text-white/50"
         >
