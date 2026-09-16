@@ -1,10 +1,10 @@
 ---
-title: Simple Guides for Fuwari
+title: Fuwari 简易指南
 published: 2024-04-01
-description: "How to use this blog template."
+description: "如何使用这个博客模板。"
 image: "./cover.jpeg"
-tags: ["Fuwari", "Blogging", "Customization"]
-category: Guides
+tags: ["Fuwari", "博客", "自定义"]
+category: 指南
 draft: false
 ---
 
