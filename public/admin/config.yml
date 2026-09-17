@@ -1,0 +1,108 @@
+# Sveltia CMS 配置
+# 官方文档：https://sveltiacms.app/en/docs/
+# 使用说明（中文）：docs/后台使用说明.md
+#
+# 后台地址：https://<你的域名>/admin/
+# 登录方式：GitHub 访问令牌（本站没有部署 OAuth 中转服务，所以只开 token）
+
+backend:
+  name: github
+  repo: xiaochen56076/NK_Blog
+  branch: master
+  # 只允许访问令牌登录；不要改成 [oauth]，除非已经部署了 OAuth 中转服务
+  auth_methods: [token]
+
+# 文件名统一转 ASCII，避免中文标题生成百分号编码的 URL
+slug:
+  encoding: ascii
+  clean_accents: true
+
+# 全局媒体库（后台侧栏的「资源库」用它；文章图片会被下面的集合级设置覆盖，存进文章自己的文件夹）
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  # ------------------------------ 文章 ------------------------------
+  - name: posts
+    label: 文章
+    label_singular: 文章
+    description: 保存后会在 src/content/posts/<文件名>/index.md 生成一篇新文章
+    folder: src/content/posts
+    create: true
+    extension: md
+    format: frontmatter
+    # 每篇文章一个文件夹：正文是 index.md，封面图存在同一层
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    slug: "{{fields.slug}}"
+    summary: "{{title}}"
+    sortable_fields: [published, title]
+    fields:
+      - name: title
+        label: 标题
+        widget: string
+
+      - name: slug
+        label: 文件名（英文，决定文章网址）
+        hint: 只能用小写字母、数字和连字符，例如 hello-astro → 网址为 /posts/hello-astro/
+        widget: string
+        pattern:
+          - "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          - 只能用小写字母、数字和连字符（-），且不能以连字符开头或结尾
+
+      - name: published
+        label: 发布日期
+        widget: datetime
+        type: date
+        default: "{{now}}"
+
+      - name: updated
+        label: 更新日期（可选）
+        widget: datetime
+        type: date
+        required: false
+
+      - name: description
+        label: 摘要（可选）
+        hint: 显示在首页卡片和分享卡片上
+        widget: text
+        required: false
+
+      - name: image
+        label: 封面图（可选）
+        hint: 直接把图片拖进来即可，会自动存到这篇文章自己的文件夹
+        widget: image
+        required: false
+
+      - name: tags
+        label: 标签（可选）
+        widget: list
+        required: false
+        default: []
+
+      - name: category
+        label: 分类（可选）
+        widget: string
+        required: false
+
+      - name: draft
+        label: 草稿（勾选后不会发布到站点）
+        widget: boolean
+        default: false
+
+      - name: body
+        label: 正文
+        widget: markdown
+
+  # ------------------------------ 单页 ------------------------------
+  - name: pages
+    label: 页面
+    files:
+      - name: about
+        label: 关于页
+        file: src/content/spec/about.md
+        fields:
+          - name: body
+            label: 正文
+            widget: markdown

@@ -100,7 +100,8 @@ export default defineConfig({
 			}
 		}),
         svelte(),
-		sitemap(),
+		// 后台页面不进 sitemap（它带 noindex，也不该被收录）
+		sitemap({ filter: (page) => !page.includes("/admin/") }),
 	],
 	markdown: {
 		remarkPlugins: [

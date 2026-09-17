@@ -1,0 +1,43 @@
+---
+// 内容后台（Sveltia CMS）入口页。
+//
+// 为什么用 Astro 页面而不是 public/admin/index.html：
+// 本主题的 src/pages/[...page].astro 是全捕获路由，会抢走 public 目录下的 /admin/ 目录索引，
+// 导致 dev 下 /admin/ 返回 404（只有 /admin/index.html 能打开）。做成真实路由后，
+// /admin/ 在 dev 与生产（Vercel）下行为一致。
+//
+// 页面本身没有任何服务端逻辑：登录、读写文章全部在浏览器里完成，配置见 public/admin/config.yml。
+const title = "内容后台 · Nskdfh 的博客";
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- 后台不应该被搜索引擎收录（robots.txt 与 X-Robots-Tag 里也做了屏蔽） -->
+		<meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+		<title>{title}</title>
+		<!--
+			这个页面刻意带一段自己的样式：
+			若某个页面完全没有 CSS，@astrojs/tailwind 会往它注入基础样式并单独分包，
+			使 src/styles/markdown.css 被拆成独立 CSS 处理环节，其中跨文件的 @apply link 会解析失败、导致构建报错。
+		-->
+		<style is:global>
+			html {
+				color-scheme: light dark;
+			}
+		</style>
+	</head>
+	<body>
+		<noscript>
+			这个内容后台需要启用 JavaScript。请返回<a href="/">博客首页</a>。
+		</noscript>
+		<!--
+			Sveltia CMS：https://sveltiacms.app/
+			版本号刻意锁定，避免 CDN 上发布新版本后被自动加载（升级请手动改版本号）。
+			is:inline 让 Astro 不要处理这个外部脚本。
+		-->
+		<script is:inline src="https://unpkg.com/@sveltia/cms@0.213.2/dist/sveltia-cms.js"></script>
+	</body>
+</html>

@@ -11,6 +11,8 @@ const postsCollection = defineCollection({
 		tags: z.array(z.string()).optional().default([]),
 		category: z.string().optional().nullable().default(""),
 		lang: z.string().optional().default(""),
+		// 由后台（Sveltia CMS）写入，仅用于记录英文文件名；站点 URL 实际由文件路径决定
+		slug: z.string().optional(),
 
 		/* For internal use */
 		prevTitle: z.string().default(""),
