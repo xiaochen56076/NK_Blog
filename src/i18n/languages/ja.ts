@@ -23,6 +23,7 @@ export const ja: Translation = {
 	[Key.minutesCount]: "分",
 	[Key.postCount]: "件の投稿",
 	[Key.postsCount]: "件の投稿",
+	[Key.posts]: "記事",
 
 	[Key.themeColor]: "テーマカラー",
 

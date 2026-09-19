@@ -461,7 +461,9 @@ function scrollFunction() {
 	let bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100)
 
 	if (backToTopBtn) {
-		if (document.body.scrollTop > bannerHeight || document.documentElement.scrollTop > bannerHeight) {
+		// 回到顶部按钮：滚动超过 200px 即出现（原为 35% 屏高，短页面几乎不会出现）
+		const BACK_TO_TOP_THRESHOLD = 200
+		if (document.body.scrollTop > BACK_TO_TOP_THRESHOLD || document.documentElement.scrollTop > BACK_TO_TOP_THRESHOLD) {
 			backToTopBtn.classList.remove('hide')
 		} else {
 			backToTopBtn.classList.add('hide')
@@ -494,6 +496,8 @@ function scrollFunction() {
 	}
 }
 window.onscroll = scrollFunction
+// 首次加载也判定一次（例如刷新时页面已处于滚动位置）
+scrollFunction()
 
 window.onresize = () => {
 	// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text

@@ -1,0 +1,30 @@
+---
+import { musicConfig } from "../../config";
+import MusicPlayer from "./MusicPlayer.svelte";
+import WidgetLayout from "./WidgetLayout.astro";
+
+interface Props {
+	class?: string;
+	style?: string;
+}
+
+const className = Astro.props.class;
+const style = Astro.props.style;
+
+const { enable, title, tracks, autoplay, playlistUrl } = musicConfig;
+---
+
+{enable && (
+    <WidgetLayout name={title} id="music" class={className} style={style}>
+        <!-- min-height 用来减少播放器水合前的布局跳动 -->
+        <div class="min-h-[7.5rem] pb-2">
+            <MusicPlayer
+                client:only="svelte"
+                tracks={tracks}
+                cardTitle={title}
+                autoplay={autoplay ?? false}
+                playlistUrl={playlistUrl ?? ""}
+            ></MusicPlayer>
+        </div>
+    </WidgetLayout>
+)}

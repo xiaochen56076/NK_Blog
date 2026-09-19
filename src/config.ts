@@ -1,6 +1,7 @@
 import type {
 	ExpressiveCodeConfig,
 	LicenseConfig,
+	MusicConfig,
 	NavBarConfig,
 	ProfileConfig,
 	SiteConfig,
@@ -87,4 +88,39 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 	// Note: Some styles (such as background color) are being overridden, see the astro.config.mjs file.
 	// Please select a dark theme, as this blog theme currently only supports dark background color
 	theme: "github-dark",
+};
+
+/* ---------------- 侧栏音乐播放器 ---------------- */
+/* 详细说明见 docs/音乐播放器说明.md */
+export const musicConfig: MusicConfig = {
+	enable: true,
+	title: "音乐",
+	// 多数浏览器会拦截自动播放，所以默认关闭（用户点一次播放后才会有声音）
+	autoplay: false,
+	/*
+	 * 预留：以后自建音乐 API（自己服务器上的歌单接口，或第三方歌单代理）时，
+	 * 把返回 MusicTrack[] 的接口地址填这里，播放器会优先使用接口数据：
+	 *   playlistUrl: "https://你的服务器/api/playlist",
+	 */
+	playlistUrl: "",
+	tracks: [
+		// ↓↓↓ 以下 3 首是「示例曲目」，只为了让你先看到效果；正式发布请替换成你自己的音乐
+		{
+			title: "示例曲目 One",
+			artist: "SoundHelix",
+			url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+		},
+		{
+			title: "示例曲目 Two",
+			artist: "SoundHelix",
+			url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+		},
+		{
+			title: "示例曲目 Three",
+			artist: "SoundHelix",
+			url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+		},
+		// 换成自己的音乐时这样写（cover 可省略）：
+		// { title: "曲名", artist: "歌手", url: "https://你的服务器/music/song.mp3", cover: "https://你的服务器/music/song.jpg" },
+	],
 };

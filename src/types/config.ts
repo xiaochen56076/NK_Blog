@@ -100,3 +100,33 @@ export type BlogPostData = {
 export type ExpressiveCodeConfig = {
 	theme: string;
 };
+
+/* ---------------- 侧栏音乐播放器 ---------------- */
+
+export type MusicTrack = {
+	/** 曲名 */
+	title: string;
+	/** 歌手 / 作者，可省略 */
+	artist?: string;
+	/** 音频直链：可以是自建服务器 / 对象存储 / CDN 上的 mp3、m4a、ogg 等 */
+	url: string;
+	/** 封面图地址，可省略（省略时显示音符占位图标） */
+	cover?: string;
+};
+
+export type MusicConfig = {
+	/** 是否在侧栏显示音乐播放器 */
+	enable: boolean;
+	/** 侧栏小卡的标题 */
+	title: string;
+	/** 是否尝试自动播放（多数浏览器会拦截，通常需要用户先点一次播放） */
+	autoplay?: boolean;
+	/**
+	 * 可选：返回 MusicTrack[] 的接口地址。
+	 * 以后若自建音乐 API（含 QQ 音乐等第三方歌单代理），把地址填这里即可，
+	 * 播放器会优先使用接口返回的曲目；留空则只用下面的 tracks。
+	 */
+	playlistUrl?: string;
+	/** 曲目列表 */
+	tracks: MusicTrack[];
+};

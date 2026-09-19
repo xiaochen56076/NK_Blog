@@ -1,10 +1,34 @@
 ---
 import { Icon } from "astro-icon/components";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n } from "../../i18n/translation";
+import {
+	getCategoryList,
+	getSortedPostsList,
+	getTagList,
+} from "../../utils/content-utils";
 import { profileConfig } from "../../config";
 import { url } from "../../utils/url-utils";
 import ImageWrapper from "../misc/ImageWrapper.astro";
 
 const config = profileConfig;
+
+// 侧栏统计：文章数 / 分类数 / 标签数
+// 数据来源与侧栏的「分类」「标签」小卡完全一致；生产构建下不计入 draft 文章
+const posts = await getSortedPostsList();
+const categories = await getCategoryList();
+const tags = await getTagList();
+
+// 三个数字都可点击：文章 → 归档页，分类 → 分类总览页，标签 → 标签总览页
+const stats = [
+	{ label: i18n(I18nKey.posts), value: posts.length, href: url("/archive/") },
+	{
+		label: i18n(I18nKey.categories),
+		value: categories.length,
+		href: url("/categories/"),
+	},
+	{ label: i18n(I18nKey.tags), value: tags.length, href: url("/tags/") },
+];
 ---
 <div class="card-base p-3">
     <a aria-label="Go to About Page" href={url('/about/')}
@@ -22,6 +46,19 @@ const config = profileConfig;
         <div class="font-bold text-xl text-center mb-1 dark:text-neutral-50 transition">{config.name}</div>
         <div class="h-1 w-5 bg-[var(--primary)] mx-auto rounded-full mb-2 transition"></div>
         <div class="text-center text-neutral-400 mb-2.5 transition">{config.bio}</div>
+
+        <!-- 文章 / 分类 / 标签 数量统计（三项都可点击跳转） -->
+        <div class="transition grid grid-cols-3 gap-1 text-center py-2 mb-2.5
+            border-t border-b border-dashed border-[var(--line-divider)]">
+            {stats.map((item) => (
+                <a href={item.href} class="group flex flex-col items-center py-1.5 rounded-lg transition
+                    hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)]">
+                    <div class="transition text-xs text-black/40 dark:text-white/40">{item.label}</div>
+                    <div class="transition text-xl font-bold text-black/75 dark:text-white/75 group-hover:text-[var(--primary)]">{item.value}</div>
+                </a>
+            ))}
+        </div>
+
         <div class="flex flex-wrap gap-2 justify-center mb-1">
             {config.links.length > 1 && config.links.map(item =>
                     <a rel="me" aria-label={item.name} href={item.url} target="_blank" class="btn-regular rounded-lg h-10 w-10 active:scale-90">
@@ -36,4 +73,3 @@ const config = profileConfig;
         </div>
     </div>
 </div>
-

@@ -1,0 +1,40 @@
+---
+import ButtonTag from "@components/control/ButtonTag.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { getTagList } from "@utils/content-utils";
+import { getTagUrl } from "@utils/url-utils";
+
+// 标签总览页（侧栏统计里的「标签」数字跳到这里）
+// 每个标签点进去是归档页的过滤视图：/archive/?tag=xxx（ArchivePanel 原生支持该参数）
+const tags = await getTagList();
+const total = tags.reduce((sum, t) => sum + t.count, 0);
+---
+
+<MainGridLayout title={i18n(I18nKey.tags)} description={i18n(I18nKey.tags)}>
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full">
+            <div class="font-bold text-2xl transition text-neutral-900 dark:text-neutral-100 relative ml-4 mb-5
+                before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
+                before:absolute before:-left-4 before:top-[0.4rem]"
+            >
+                {i18n(I18nKey.tags)}
+                <span class="text-sm font-normal text-black/30 dark:text-white/30 ml-2">{tags.length} / {total}</span>
+            </div>
+
+            {tags.length > 0 ? (
+                <div class="flex gap-2 flex-wrap">
+                    {tags.map((t) => (
+                        <ButtonTag href={getTagUrl(t.name)} label={`View all posts with the ${t.name.trim()} tag`}>
+                            <span class="transition">{t.name.trim()}</span>
+                            <span class="transition ml-2 text-xs opacity-60">{t.count}</span>
+                        </ButtonTag>
+                    ))}
+                </div>
+            ) : (
+                <div class="transition text-black/40 dark:text-white/40">{i18n(I18nKey.noTags)}</div>
+            )}
+        </div>
+    </div>
+</MainGridLayout>
