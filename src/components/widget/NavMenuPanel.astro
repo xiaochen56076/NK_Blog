@@ -8,6 +8,8 @@ interface Props {
 }
 
 const links = Astro.props.links;
+// 指向后台的链接要整页加载：后台页没有 main 容器，
+// 走 Swup 无刷新跳转会报 "Container missing in incoming document: main" 并中止跳转。
 ---
 <div id="nav-menu-panel" class:list={["float-panel float-panel-closed absolute transition-all fixed right-4 px-2 py-2"]}>
     {links.map((link) => (
@@ -15,6 +17,7 @@ const links = Astro.props.links;
             hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] transition
         "
            target={link.external ? "_blank" : null}
+           data-no-swup={!link.external && link.url.startsWith("/admin") ? "true" : undefined}
         >
             <div class="transition text-black/75 dark:text-white/75 font-bold group-hover:text-[var(--primary)] group-active:text-[var(--primary)]">
                 {link.name}
