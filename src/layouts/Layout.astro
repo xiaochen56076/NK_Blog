@@ -563,6 +563,53 @@ const setup = () => {
 	)
 }
 
+/* --------------------------- 相对时间（「N 分钟前」） ---------------------------
+ * 静态站点在构建时并不知道"现在几点"，所以换算放在浏览器里做：
+ * 把带 data-relative-time 的 <time> 文本换成相对时间，并每 30 秒刷新一次。
+ * 精确日期保留在 title 提示与 data-exact-date 里（鼠标悬停可看，也利于 SEO）。
+ */
+function relativeTimeText(date: Date): string {
+	const diff = Date.now() - date.getTime();
+	if (Number.isNaN(diff) || diff < 0) return "";
+	const minute = Math.floor(diff / 60000);
+	if (minute < 1) return "刚刚";
+	if (minute < 60) return `${minute} 分钟前`;
+	const hour = Math.floor(minute / 60);
+	if (hour < 24) return `${hour} 小时前`;
+	const day = Math.floor(hour / 24);
+	if (day < 30) return `${day} 天前`;
+	const month = Math.floor(day / 30);
+	if (month < 12) return `${month} 个月前`;
+	return `${Math.floor(month / 12)} 年前`;
+}
+
+function applyRelativeTimes() {
+	document.querySelectorAll("time[data-relative-time]").forEach((node) => {
+		const iso = node.getAttribute("datetime");
+		if (!iso) return;
+		const exact = node.getAttribute("data-exact-date") || node.textContent || "";
+		if (exact && node.getAttribute("title") !== exact) {
+			node.setAttribute("title", exact);
+		}
+		const text = relativeTimeText(new Date(iso));
+		if (text && node.textContent !== text) {
+			node.textContent = text;
+		}
+	});
+}
+
+applyRelativeTimes();
+window.setInterval(applyRelativeTimes, 30000);
+
+// Swup 无刷新切页后，新内容里的 <time> 也要重新换算
+if (window.swup) {
+	window.swup.hooks.on("page:view", applyRelativeTimes);
+} else {
+	document.addEventListener("swup:enable", () => {
+		window.swup.hooks.on("page:view", applyRelativeTimes);
+	});
+}
+
 if (window.swup) {
 	setup()
 } else {

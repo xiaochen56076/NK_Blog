@@ -32,7 +32,12 @@ const className = Astro.props.class;
         >
             <Icon name="material-symbols:calendar-today-outline-rounded" class="text-xl"></Icon>
         </div>
-        <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(published)}</span>
+        <time
+            datetime={published.toISOString()}
+            data-relative-time
+            data-exact-date={formatDateToYYYYMMDD(published)}
+            title={formatDateToYYYYMMDD(published)}
+            class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(published)}</time>
     </div>
 
     <!-- update date -->
@@ -42,7 +47,12 @@ const className = Astro.props.class;
             >
                 <Icon name="material-symbols:edit-calendar-outline-rounded" class="text-xl"></Icon>
             </div>
-            <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(updated)}</span>
+            <time
+                datetime={updated.toISOString()}
+                data-relative-time
+                data-exact-date={formatDateToYYYYMMDD(updated)}
+                title={formatDateToYYYYMMDD(updated)}
+                class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(updated)}</time>
         </div>
     )}
 

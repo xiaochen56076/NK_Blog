@@ -37,6 +37,39 @@ function formatDate(date: Date) {
 	return `${month}-${day}`;
 }
 
+function formatFullDate(date: Date) {
+	const year = date.getFullYear();
+	const month = (date.getMonth() + 1).toString().padStart(2, "0");
+	const day = date.getDate().toString().padStart(2, "0");
+	return `${year}-${month}-${day}`;
+}
+
+// 相对时间：静态页面在构建时不知道"现在几点"，所以放在组件里算，并每 30 秒刷新一次。
+// 精确日期保留在 title 提示里（鼠标悬停可见）。
+let now = Date.now();
+
+onMount(() => {
+	const timer = setInterval(() => {
+		now = Date.now();
+	}, 30000);
+	return () => clearInterval(timer);
+});
+
+function relativeTime(date: Date) {
+	const diff = now - new Date(date).getTime();
+	if (Number.isNaN(diff) || diff < 0) return formatFullDate(date);
+	const minute = Math.floor(diff / 60000);
+	if (minute < 1) return "刚刚";
+	if (minute < 60) return `${minute} 分钟前`;
+	const hour = Math.floor(minute / 60);
+	if (hour < 24) return `${hour} 小时前`;
+	const day = Math.floor(hour / 24);
+	if (day < 30) return `${day} 天前`;
+	const month = Math.floor(day / 30);
+	if (month < 12) return `${month} 个月前`;
+	return `${Math.floor(month / 12)} 年前`;
+}
+
 function formatTag(tagList: string[]) {
 	return tagList.map((t) => `#${t}`).join(" ");
 }
@@ -112,7 +145,10 @@ onMount(async () => {
                     <div class="flex flex-row justify-start items-center h-full">
                         <!-- date -->
                         <div class="w-[15%] md:w-[10%] transition text-sm text-right text-50">
-                            {formatDate(post.data.published)}
+                            <time
+                                    datetime={post.data.published.toISOString()}
+                                    title={formatFullDate(post.data.published)}
+                            >{relativeTime(post.data.published)}</time>
                         </div>
 
                         <!-- dot and line -->
