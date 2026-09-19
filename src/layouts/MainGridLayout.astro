@@ -21,6 +21,8 @@ interface Props {
 	description?: string;
 	lang?: string;
 	setOGTypeArticle?: boolean;
+	/** 分享卡片配图（og:image 用），可传相对路径或绝对地址 */
+	ogImage?: string;
 	headings?: MarkdownHeading[];
 }
 
@@ -31,6 +33,7 @@ const {
 	lang,
 	setOGTypeArticle,
 	headings = [],
+	ogImage,
 } = Astro.props;
 const hasBannerCredit =
 	siteConfig.banner.enable && siteConfig.banner.credit.enable;
@@ -41,7 +44,7 @@ const mainPanelTop = siteConfig.banner.enable
 	: "5.5rem";
 ---
 
-<Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle}>
+<Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} ogImage={ogImage}>
 
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>

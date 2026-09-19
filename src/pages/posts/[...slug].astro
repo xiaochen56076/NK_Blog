@@ -1,5 +1,6 @@
 ---
 import path from "node:path";
+import { getImage } from "astro:assets";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "@i18n/i18nKey";
@@ -23,6 +24,28 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+
+// 分享卡片配图（og:image）：把文章封面解析成「构建后真实存在的资源地址」。
+// 封面用的是 page bundle 的相对路径（cover.webp），交给 astro:assets 处理后
+// 会生成带哈希的 /_astro/xxx.webp；直接拼相对路径是 404，所以这里走一次 getImage。
+let ogImage: string | undefined;
+if (entry.data.image) {
+	const files = import.meta.glob<ImageMetadata>("../../**", { import: "default" });
+	const normalized = path
+		.normalize(
+			path.join("../../content/posts/", getDir(entry.id), entry.data.image),
+		)
+		.replace(/\\/g, "/");
+	const file = files[normalized];
+	if (file) {
+		const img = await file();
+		const optimized = await getImage({ src: img, width: 1200, format: "webp" });
+		// 转成绝对地址：og:image 与 JSON-LD 都要求完整 URL
+		ogImage = new URL(optimized.src, Astro.site ?? Astro.url).href;
+	} else {
+		console.warn(`[og:image] 找不到封面文件：${normalized}`);
+	}
+}
 const { Content, headings } = await entry.render();
 
 const { remarkPluginFrontmatter } = await entry.render();
@@ -42,10 +65,10 @@ const jsonLd = {
 	inLanguage: entry.data.lang
 		? entry.data.lang.replace("_", "-")
 		: siteConfig.lang.replace("_", "-"),
-	// TODO include cover image here
+	image: ogImage ? [ogImage] : undefined,
 };
 ---
-<MainGridLayout banner={entry.data.image} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true} headings={headings}>
+<MainGridLayout banner={entry.data.image} ogImage={ogImage} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true} headings={headings}>
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
     <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative mb-4">
         <div id="post-container" class:list={["card-base z-10 px-6 md:px-9 pt-6 pb-4 relative w-full ",
