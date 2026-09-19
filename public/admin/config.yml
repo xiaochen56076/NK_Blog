@@ -2,15 +2,19 @@
 # 官方文档：https://sveltiacms.app/en/docs/
 # 使用说明（中文）：docs/后台使用说明.md
 #
-# 后台地址：https://<你的域名>/admin/
-# 登录方式：GitHub 访问令牌（本站没有部署 OAuth 中转服务，所以只开 token）
+# 后台地址：https://56076077.xyz/admin/
+# 登录方式：GitHub 授权登录（自建 OAuth 代理，见 functions/api/[[path]].js），访问令牌保留作备用
 
 backend:
   name: github
   repo: xiaochen56076/NK_Blog
   branch: master
-  # 只允许访问令牌登录；不要改成 [oauth]，除非已经部署了 OAuth 中转服务
-  auth_methods: [token]
+  # 自建 OAuth 代理（Cloudflare Pages Function）：后台会请求 <base_url>/auth 与 <base_url>/callback
+  base_url: https://56076077.xyz/api
+  # 首选 GitHub 授权登录；token 留作备用（OAuth 万一出问题还能用令牌进）
+  auth_methods: [oauth, token]
+  # 只申请「公开仓库读写」权限：NK_Blog 是公开仓库，这样权限最小
+  auth_scope: public_repo
 
 # 文件名统一转 ASCII，避免中文标题生成百分号编码的 URL
 slug:

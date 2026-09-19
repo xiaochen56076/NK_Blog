@@ -1,0 +1,13 @@
+# Cloudflare Pages 响应头配置
+# 说明：本站部署在 Cloudflare Pages，Vercel 的 vercel.json 在这里不生效，所以安全头写在这个文件里。
+# 只作用于后台 /admin/*（含 config.yml），不影响博客页面的正常访问。
+#
+# 参考：https://developers.cloudflare.com/pages/configuration/headers/
+
+/admin/*
+  Content-Security-Policy: script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' blob: data: https://*.githubusercontent.com; media-src blob:; frame-src blob:; connect-src 'self' blob: data: https://unpkg.com https://api.github.com https://www.githubstatus.com; manifest-src blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: same-origin
+  X-Robots-Tag: noindex, nofollow
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
