@@ -31,6 +31,20 @@ const items = [
 	},
 ];
 
+// 主题里其它浮层的 id：打开本面板前先把它们收起来，避免多个浮层叠在一起
+const OTHER_PANEL_IDS = [
+	"display-setting", // 主题色（DisplaySettings.svelte）
+	"nav-menu-panel", // 移动端导航（NavMenuPanel.astro）
+	"search-panel", // 搜索（Search.svelte）
+	"light-dark-panel", // 亮色/暗色/跟随系统（LightDarkSwitch.svelte）
+];
+
+function closeOtherPanels() {
+	for (const id of OTHER_PANEL_IDS) {
+		document.getElementById(id)?.classList.add("float-panel-closed");
+	}
+}
+
 // 点击面板外部、或按 Esc 关闭（与主题其它浮层行为一致）
 function handleDocumentClick(event: MouseEvent) {
 	if (!open) return;
@@ -45,12 +59,42 @@ function handleKeydown(event: KeyboardEvent) {
 	if (event.key === "Escape") open = false;
 }
 
+// 鼠标移到「亮色/暗色」按钮上会浮出它自己的面板（主题原有行为，且层级最高 z-50），此时收起本面板
+function handleMouseOver(event: MouseEvent) {
+	if (!open) return;
+	const target = event.target;
+	if (target instanceof Element && target.closest("#scheme-switch")) {
+		open = false;
+	}
+}
+
+// 离开页面 / 从浏览器缓存（bfcache）恢复时收起，避免「从后台返回后还一直挂着」
+function handlePageHide() {
+	open = false;
+}
+
+function handlePageShow(event: PageTransitionEvent) {
+	if (event.persisted) open = false;
+}
+
+// 打开本面板前，先收起主题的其它浮层
+function openPanel() {
+	closeOtherPanels();
+	open = true;
+}
+
 onMount(() => {
 	document.addEventListener("click", handleDocumentClick);
 	document.addEventListener("keydown", handleKeydown);
+	document.addEventListener("mouseover", handleMouseOver);
+	window.addEventListener("pagehide", handlePageHide);
+	window.addEventListener("pageshow", handlePageShow);
 	return () => {
 		document.removeEventListener("click", handleDocumentClick);
 		document.removeEventListener("keydown", handleKeydown);
+		document.removeEventListener("mouseover", handleMouseOver);
+		window.removeEventListener("pagehide", handlePageHide);
+		window.removeEventListener("pageshow", handlePageShow);
 	};
 });
 </script>
@@ -59,7 +103,7 @@ onMount(() => {
     id={SWITCH_ID}
     aria-label="后台设置"
     aria-expanded={open}
-    on:click={() => (open = !open)}
+    on:click={() => (open ? (open = false) : openPanel())}
     class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90"
     class:text-[var(--primary)]={open}
 >
