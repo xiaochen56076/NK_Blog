@@ -47,11 +47,25 @@ function closeOtherPanels() {
 
 // 点击面板外部、或按 Esc 关闭（与主题其它浮层行为一致）
 function handleDocumentClick(event: MouseEvent) {
-	if (!open) return;
 	const target = event.target;
-	if (!(target instanceof Node)) return;
+	if (!(target instanceof Element)) return;
+
+	// 点到任何链接都先收起：既包括面板内的「内容后台」「GitHub 仓库」，
+	// 也包括站内跳转（Swup 无刷新切页不会重载导航栏，面板会一直挂着）
+	if (target.closest("a")) {
+		open = false;
+		return;
+	}
+
+	if (!open) return;
+	const switcher = document.getElementById(SWITCH_ID);
+	if (switcher?.contains(target)) return;
 	if (document.getElementById(PANEL_ID)?.contains(target)) return;
-	if (document.getElementById(SWITCH_ID)?.contains(target)) return;
+	open = false;
+}
+
+// Swup 站内切页后收起（导航栏在 swup 容器之外，不会被替换，也就不会触发 pagehide）
+function handleSwupPageView() {
 	open = false;
 }
 
@@ -89,10 +103,20 @@ onMount(() => {
 	document.addEventListener("mouseover", handleMouseOver);
 	window.addEventListener("pagehide", handlePageHide);
 	window.addEventListener("pageshow", handlePageShow);
+
+	// 挂上 Swup 的切页钩子（swup 可能比本组件晚就绪，所以两种时机都兜住）
+	const attachSwupHook = () => {
+		const swup = (window as unknown as { swup?: { hooks?: { on?: (e: string, cb: () => void) => void } } }).swup;
+		swup?.hooks?.on?.("page:view", handleSwupPageView);
+	};
+	attachSwupHook();
+	document.addEventListener("swup:enable", attachSwupHook, { once: true });
+
 	return () => {
 		document.removeEventListener("click", handleDocumentClick);
 		document.removeEventListener("keydown", handleKeydown);
 		document.removeEventListener("mouseover", handleMouseOver);
+		document.removeEventListener("swup:enable", attachSwupHook);
 		window.removeEventListener("pagehide", handlePageHide);
 		window.removeEventListener("pageshow", handlePageShow);
 	};
