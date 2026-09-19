@@ -59,16 +59,15 @@ export const profileConfig: ProfileConfig = {
 	bio: "这里是一段个人简介。",
 	links: [
 		{
-			name: "Twitter",
-			icon: "fa6-brands:twitter", // Visit https://icones.js.org/ for icon codes
-			// You will need to install the corresponding icon set if it's not already included
-			// `pnpm add @iconify-json/<icon-set-name>`
-			url: "https://twitter.com",
+			name: "QQ",
+			icon: "fa6-brands:qq", // 图标来自已装的 fa6-brands 图标集
+			// 点一下会唤起 QQ 加好友；没装 QQ 的访客会看到腾讯的网页提示
+			url: "https://wpa.qq.com/msgrd?v=3&uin=1283048178&site=qq&menu=yes",
 		},
 		{
-			name: "Steam",
-			icon: "fa6-brands:steam",
-			url: "https://store.steampowered.com",
+			name: "邮箱",
+			icon: "fa6-solid:envelope",
+			url: "mailto:nskdfh@163.com",
 		},
 		{
 			name: "GitHub",

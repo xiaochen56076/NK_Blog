@@ -612,6 +612,81 @@ function applyRelativeTimes() {
 applyRelativeTimes();
 window.setInterval(applyRelativeTimes, 30000);
 
+/* ------------------- 邮箱图标：悬停/点击浮出提示框显示邮箱 -------------------
+ * 侧栏社交图标里的邮箱（<a data-email="...">）：
+ *   - 鼠标悬停 / 手机点一下 → 图标上方浮出小提示框显示邮箱地址
+ *   - 点击 → 顺便复制到剪贴板，提示框变成「已复制：…」
+ * 提示框挂在 body 上（fixed 定位），不会被卡片的 overflow 裁掉；
+ * 事件委托在 document 上，所以 Swup 换页后依然有效。
+ */
+function setupEmailTooltip() {
+	if (document.querySelector("[data-email-tip]")) return;
+
+	const tip = document.createElement("div");
+	tip.setAttribute("data-email-tip", "");
+	Object.assign(tip.style, {
+		position: "fixed",
+		zIndex: "9999",
+		padding: "6px 12px",
+		borderRadius: "8px",
+		fontSize: "13px",
+		lineHeight: "1.4",
+		whiteSpace: "nowrap",
+		pointerEvents: "none",
+		opacity: "0",
+		transition: "opacity .15s ease, transform .15s ease",
+		transform: "translate(-50%, 4px)",
+		background: "var(--card-bg, #ffffff)",
+		color: "var(--primary, #4f9cf9)",
+		border: "1px solid var(--line-divider, rgba(0,0,0,.08))",
+		boxShadow: "0 6px 20px rgba(0,0,0,.18)",
+	});
+	document.body.appendChild(tip);
+
+	let hideTimer = 0;
+	const hide = () => {
+		tip.style.opacity = "0";
+		tip.style.transform = "translate(-50%, 4px)";
+	};
+	const show = (anchor: Element, text: string, copied = false) => {
+		const rect = anchor.getBoundingClientRect();
+		tip.textContent = text;
+		tip.style.left = `${rect.left + rect.width / 2}px`;
+		// 图标在卡片底部，提示框放在上方更稳妥
+		tip.style.top = `${rect.top - 36}px`;
+		tip.style.transform = "translate(-50%, 0)";
+		tip.style.opacity = "1";
+		tip.style.color = copied ? "#22c55e" : "var(--primary, #4f9cf9)";
+		window.clearTimeout(hideTimer);
+		if (copied) hideTimer = window.setTimeout(hide, 1800);
+	};
+	const emailLink = (target: EventTarget | null) =>
+		target instanceof Element ? target.closest("a[data-email]") : null;
+
+	document.addEventListener("mouseover", (e) => {
+		const el = emailLink(e.target);
+		if (el) show(el, el.getAttribute("data-email") || "");
+	});
+	document.addEventListener("mouseout", (e) => {
+		if (emailLink(e.target)) hide();
+	});
+	document.addEventListener("click", async (e) => {
+		const el = emailLink(e.target);
+		const email = el?.getAttribute("data-email") || "";
+		if (!el || !email) return;
+		// 点击的语义是「看到 / 复制邮箱」，所以不跳 mailto
+		e.preventDefault();
+		try {
+			await navigator.clipboard.writeText(email);
+			show(el, `已复制：${email}`, true);
+		} catch {
+			show(el, email);
+		}
+	});
+}
+
+setupEmailTooltip();
+
 // Swup 无刷新切页后，新内容里的 <time> 也要重新换算
 if (window.swup) {
 	window.swup.hooks.on("page:view", applyRelativeTimes);
