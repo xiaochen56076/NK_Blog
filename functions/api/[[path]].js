@@ -206,9 +206,21 @@ const handleCallback = async (request, env) => {
 				client_secret: env.GITHUB_CLIENT_SECRET,
 			}),
 		});
-		const data = await res.json();
+		// 先取原始文本再解析：出错时能把 GitHub 的原文写进 Cloudflare Functions 日志
+		const raw = await res.text();
+		let data = {};
+		try {
+			data = JSON.parse(raw);
+		} catch {
+			data = {};
+		}
 		token = data.access_token ?? "";
 		ghError = data.error_description ?? data.error ?? "";
+		if (!token) {
+			console.error(
+				`[oauth] 换取令牌失败 status=${res.status} body=${raw.slice(0, 400)}`,
+			);
+		}
 	} catch {
 		return outputHTML({
 			env,
@@ -247,12 +259,15 @@ const handleCallback = async (request, env) => {
 		}
 
 		if (allowed.length > 0 && !allowed.includes(login.toLowerCase())) {
+			console.warn(`[oauth] 拒绝登录 user=${login || "(未知)"} 不在白名单`);
 			return outputHTML({
 				env,
 				error: `GitHub 账号 ${login || "(未知)"} 没有这个后台的权限`,
 				errorCode: "UNAUTHORIZED_USER",
 			});
 		}
+
+		console.log(`[oauth] 登录成功 user=${login}`);
 	}
 
 	return outputHTML({ env, token });
