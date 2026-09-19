@@ -584,6 +584,7 @@ function relativeTimeText(date: Date): string {
 }
 
 function applyRelativeTimes() {
+	// 模式一：把文本换成相对时间（卡片底部那格：发布日期 → 多久前）
 	document.querySelectorAll("time[data-relative-time]").forEach((node) => {
 		const iso = node.getAttribute("datetime");
 		if (!iso) return;
@@ -594,6 +595,16 @@ function applyRelativeTimes() {
 		const text = relativeTimeText(new Date(iso));
 		if (text && node.textContent !== text) {
 			node.textContent = text;
+		}
+	});
+
+	// 模式二：文本保持精确日期，把「多久前」放进悬停提示里（卡片顶部/文章页的发布日期）
+	document.querySelectorAll("time[data-relative-tooltip]").forEach((node) => {
+		const iso = node.getAttribute("datetime");
+		if (!iso) return;
+		const text = relativeTimeText(new Date(iso));
+		if (text && node.getAttribute("title") !== text) {
+			node.setAttribute("title", text);
 		}
 	});
 }

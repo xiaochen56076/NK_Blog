@@ -34,9 +34,7 @@ const className = Astro.props.class;
         </div>
         <time
             datetime={published.toISOString()}
-            data-relative-time
-            data-exact-date={formatDateToYYYYMMDD(published)}
-            title={formatDateToYYYYMMDD(published)}
+            data-relative-tooltip
             class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(published)}</time>
     </div>
 
@@ -49,9 +47,7 @@ const className = Astro.props.class;
             </div>
             <time
                 datetime={updated.toISOString()}
-                data-relative-time
-                data-exact-date={formatDateToYYYYMMDD(updated)}
-                title={formatDateToYYYYMMDD(updated)}
+                data-relative-tooltip
                 class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(updated)}</time>
         </div>
     )}
