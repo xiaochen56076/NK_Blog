@@ -6,6 +6,7 @@ import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
+import ShareButton from "@components/control/ShareButton.svelte";
 import { getSortedPosts } from "@utils/content-utils";
 import { getDir, getPostUrlBySlug } from "@utils/url-utils";
 import { Icon } from "astro-icon/components";
@@ -24,6 +25,9 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+
+// 分享按钮用的绝对地址（Astro.site 已在 astro.config.mjs 里配置为本站域名）
+const postUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 
 // 分享卡片配图（og:image）：把文章封面解析成「构建后真实存在的资源地址」。
 // 封面用的是 page bundle 的相对路径（cover.webp），交给 astro:assets 处理后
@@ -75,7 +79,7 @@ const jsonLd = {
             {}
         ]}>
             <!-- word count and reading time -->
-            <div class="flex flex-row text-black/30 dark:text-white/30 gap-5 mb-3 transition onload-animation">
+            <div class="flex flex-row items-center text-black/30 dark:text-white/30 gap-5 mb-3 transition onload-animation">
                 <div class="flex flex-row items-center">
                     <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
                         <Icon name="material-symbols:notes-rounded"></Icon>
@@ -91,6 +95,10 @@ const jsonLd = {
                     </div>
                 </div>
             </div>
+
+            <div class="ml-auto flex items-center">
+                    <ShareButton client:load url={postUrl} title={entry.data.title}></ShareButton>
+                </div>
 
             <!-- title -->
             <div class="relative onload-animation">
