@@ -1,6 +1,6 @@
 <script lang="ts">
 import Icon from "@iconify/svelte";
-import { onMount } from "svelte";
+import { onMount, tick } from "svelte";
 
 // 文章分享按钮。
 // 交互：
@@ -15,6 +15,23 @@ let copied = false;
 let copyFailed = false;
 let canNativeShare = false;
 let preferNative = false;
+let portalEl: HTMLDivElement | undefined;
+
+/**
+ * 打开分享面板。
+ *
+ * 关键：面板遮罩会被移动到 <body> 下 —— 因为主题的入场动画（.onload-animation
+ * 用的是 transform 动画）会让祖先元素成为 fixed 定位的包含块，
+ * 那样 position:fixed 就变成"相对那个祖先定位"，面板会跟着文章滚动，
+ * 而不是固定在视口正中。（音乐播放器的迷你窗也是同样的处理）
+ */
+async function openPanel() {
+	open = true;
+	await tick();
+	if (portalEl && portalEl.parentElement !== document.body) {
+		document.body.appendChild(portalEl);
+	}
+}
 
 onMount(() => {
 	canNativeShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
@@ -56,7 +73,7 @@ async function onShareClick() {
 			// 用户取消或系统面板不可用 → 退回自建面板
 		}
 	}
-	open = true;
+	await openPanel();
 }
 
 async function nativeShare() {
@@ -130,6 +147,7 @@ function onKeydown(event: KeyboardEvent) {
 
 {#if open}
     <div
+        bind:this={portalEl}
         class="fixed inset-0 z-[100] flex items-center justify-center px-4"
         role="presentation"
         on:click={close}
