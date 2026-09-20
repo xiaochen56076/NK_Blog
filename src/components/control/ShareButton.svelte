@@ -15,6 +15,8 @@ let copied = false;
 let copyFailed = false;
 let canNativeShare = false;
 let preferNative = false;
+/** 系统分享失败的原因（显示在面板上，方便定位"为什么没弹出系统分享"） */
+let nativeError = "";
 let portalEl: HTMLDivElement | undefined;
 
 /**
@@ -75,25 +77,25 @@ const shareTargets = () => [
 	},
 ];
 
-async function onShareClick() {
-	if (preferNative) {
-		try {
-			await navigator.share({ title, url });
-			return;
-		} catch {
-			// 用户取消或系统面板不可用 → 退回自建面板
-		}
-	}
-	await openPanel();
-}
-
 async function nativeShare() {
 	try {
 		await navigator.share({ title, url });
 		open = false;
-	} catch {
-		// 取消就不做事
+		nativeError = "";
+	} catch (e) {
+		// AbortError 是用户主动取消，不算问题；其它错误记下来并显示在面板上
+		const name = (e as Error)?.name || "unknown";
+		if (name !== "AbortError") nativeError = name;
+		await openPanel();
 	}
+}
+
+async function onShareClick() {
+	if (preferNative) {
+		await nativeShare();
+		return;
+	}
+	await openPanel();
 }
 
 // 复制到剪贴板：优先用现代 API；失败（非安全上下文、权限被拒、老浏览器）时退回
@@ -252,6 +254,15 @@ function onKeydown(event: KeyboardEvent) {
             {/if}
 
             <div class="mt-3 text-xs text-black/40 dark:text-white/40 leading-relaxed">
+                {#if nativeError}
+                    <span class="text-amber-600 dark:text-amber-400">
+                        系统分享被浏览器拒绝（{nativeError}），请用上面的方式分享。
+                    </span><br />
+                {:else if !canNativeShare}
+                    <span class="text-amber-600 dark:text-amber-400">
+                        当前浏览器不支持「系统分享」（微信 / QQ 内置浏览器常见），请用上面的方式分享。
+                    </span><br />
+                {/if}
                 微信没有开放网页分享接口，所以想发微信请用「复制链接」再粘贴给好友。
             </div>
         </div>
