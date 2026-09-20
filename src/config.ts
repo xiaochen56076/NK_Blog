@@ -7,6 +7,7 @@ import type {
 	SiteConfig,
 } from "./types/config";
 import { LinkPreset } from "./types/config";
+import { generatedPlaylist } from "./music-playlist";
 
 export const siteConfig: SiteConfig = {
 	title: "Nskdfh 的博客",
@@ -102,7 +103,13 @@ export const musicConfig: MusicConfig = {
 	 *   playlistUrl: "https://你的服务器/api/playlist",
 	 */
 	playlistUrl: "",
-	tracks: [
+	// 曲目来自 src/music-playlist.ts —— 由 scripts/make-playlist.mjs 扫描 public/music/ 自动生成。
+	// 新增音乐：把音频放进 public/music/（文件名建议「曲名 - 歌手.mp3」）后执行 pnpm run music，
+	// 或者直接提交推送（构建时会自动执行）。下面这几首示例只在目录里还没有音频时才显示。
+	tracks:
+		generatedPlaylist.length > 0
+			? generatedPlaylist
+			: [
 		// ↓↓↓ 以下 3 首是「示例曲目」，只为了让你先看到效果；正式发布请替换成你自己的音乐
 		{
 			title: "示例曲目 One",
