@@ -35,13 +35,29 @@ async function openPanel() {
 
 onMount(() => {
 	canNativeShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
-	preferNative =
-		canNativeShare && window.matchMedia("(pointer: coarse)").matches;
+	// 判定为"手机/平板"：更宽松一点，触屏设备或粗指针都算
+	const coarse =
+		window.matchMedia("(pointer: coarse)").matches ||
+		window.matchMedia("(any-pointer: coarse)").matches;
+	const touch = (navigator.maxTouchPoints ?? 0) > 0;
+	preferNative = canNativeShare && (coarse || touch);
 });
 
 const enc = (s: string) => encodeURIComponent(s);
 
 const shareTargets = () => [
+	{
+		name: "QQ 好友",
+		icon: "fa6-brands:qq",
+		// 官方页面标题为「发送给QQ好友和群组」：手机扫码/登录后可发给好友或群
+		href: `https://connect.qq.com/widget/shareqq/index.html?url=${enc(url)}&title=${enc(title)}`,
+	},
+	{
+		name: "QQ 空间",
+		icon: "fa6-brands:qq",
+		// 官方页面标题为「分享到QQ空间」
+		href: `https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${enc(url)}&title=${enc(title)}`,
+	},
 	{
 		name: "微博",
 		icon: "fa6-brands:weibo",
@@ -56,11 +72,6 @@ const shareTargets = () => [
 		name: "Telegram",
 		icon: "fa6-brands:telegram",
 		href: `https://t.me/share/url?url=${enc(url)}&text=${enc(title)}`,
-	},
-	{
-		name: "QQ 空间",
-		icon: "fa6-brands:qq",
-		href: `https://connect.qq.com/widget/shareqq/index.html?url=${enc(url)}&title=${enc(title)}`,
 	},
 ];
 
