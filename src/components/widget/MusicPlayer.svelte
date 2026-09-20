@@ -118,11 +118,19 @@ function onKeydown(event: KeyboardEvent) {
 	if (event.key === "Escape") closeMini();
 }
 
-/* 播放列表条目样式：当前曲目用主色 */
-function itemClass(i: number) {
+/* 播放列表条目样式：当前曲目用主色 + 高亮底色
+ * 注意：必须把「当前播放的下标」作为参数传进来。
+ * 之前写成 itemClass(i) 并在函数体里读 index，Svelte 编译器看不到这个依赖，
+ * 表达式会被当成静态的 —— 切歌后高亮不会更新（一直停在第 1 首）。 */
+function itemClass(i: number, current: number) {
 	const base =
 		"flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left transition hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] ";
-	return base + (i === index ? "text-[var(--primary)]" : "text-black/75 dark:text-white/75");
+	return (
+		base +
+		(i === current
+			? "bg-[var(--btn-plain-bg-hover)] text-[var(--primary)] font-semibold"
+			: "text-black/75 dark:text-white/75")
+	);
 }
 
 onMount(() => {
@@ -285,7 +293,7 @@ onMount(() => {
                 <div class="music-list mt-2 max-h-52 overflow-y-auto pr-1">
                     {#each tracks as item, i}
                         <button
-                            class={itemClass(i)}
+                            class={itemClass(i, index)}
                             on:click={() => playAt(i)}
                         >
                             <span class="w-4 shrink-0 text-center text-xs text-black/30 dark:text-white/30">
