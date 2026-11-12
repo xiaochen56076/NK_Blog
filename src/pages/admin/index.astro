@@ -4,7 +4,7 @@
 // 为什么用 Astro 页面而不是 public/admin/index.html：
 // 本主题的 src/pages/[...page].astro 是全捕获路由，会抢走 public 目录下的 /admin/ 目录索引，
 // 导致 dev 下 /admin/ 返回 404（只有 /admin/index.html 能打开）。做成真实路由后，
-// /admin/ 在 dev 与生产（Vercel）下行为一致。
+// /admin/ 在 dev 与生产（Cloudflare Pages）下行为一致。
 //
 // 页面本身没有任何服务端逻辑：登录、读写文章全部在浏览器里完成，配置见 public/admin/config.yml。
 const title = "内容后台 · Nskdfh 的博客";
