@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" width="960" height="300" role="img" aria-label="双游标：已交付与已确认之间是可重发的区间">
+  <g font-family="system-ui, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="480" y="36" text-anchor="middle" font-size="14" fill="#64748b">两条水位线：发出 ≠ 读过</text>
+
+    <rect x="500" y="150" width="200" height="60" fill="#dbeafe"/>
+    <text x="600" y="142" text-anchor="middle" font-size="12" fill="#2563eb">已交付但未确认，下一轮重发</text>
+
+    <line x1="80" y1="180" x2="880" y2="180" stroke="#cbd5e1" stroke-width="3"/>
+    <g stroke="#94a3b8" stroke-width="2">
+      <line x1="80" y1="174" x2="80" y2="186"/>
+      <line x1="120" y1="174" x2="120" y2="186"/>
+      <line x1="160" y1="174" x2="160" y2="186"/>
+      <line x1="200" y1="174" x2="200" y2="186"/>
+      <line x1="240" y1="174" x2="240" y2="186"/>
+      <line x1="280" y1="174" x2="280" y2="186"/>
+      <line x1="320" y1="174" x2="320" y2="186"/>
+      <line x1="360" y1="174" x2="360" y2="186"/>
+      <line x1="400" y1="174" x2="400" y2="186"/>
+      <line x1="440" y1="174" x2="440" y2="186"/>
+      <line x1="480" y1="174" x2="480" y2="186"/>
+      <line x1="520" y1="174" x2="520" y2="186"/>
+      <line x1="560" y1="174" x2="560" y2="186"/>
+      <line x1="600" y1="174" x2="600" y2="186"/>
+      <line x1="640" y1="174" x2="640" y2="186"/>
+      <line x1="680" y1="174" x2="680" y2="186"/>
+      <line x1="720" y1="174" x2="720" y2="186"/>
+      <line x1="760" y1="174" x2="760" y2="186"/>
+      <line x1="800" y1="174" x2="800" y2="186"/>
+      <line x1="840" y1="174" x2="840" y2="186"/>
+      <line x1="880" y1="174" x2="880" y2="186"/>
+    </g>
+
+    <line x1="500" y1="104" x2="500" y2="232" stroke="#0f766e" stroke-width="2.5"/>
+    <text x="500" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#0f766e">已确认</text>
+
+    <line x1="700" y1="104" x2="700" y2="232" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="7 5"/>
+    <text x="700" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#2563eb">已交付</text>
+
+    <text x="80" y="212" font-size="11.5" fill="#94a3b8">经历编号 →</text>
+
+    <text x="480" y="272" text-anchor="middle" font-size="12.5" fill="#64748b">
+      重复整理可以接受，伪造已处理不行
+    </text>
+  </g>
+</svg>

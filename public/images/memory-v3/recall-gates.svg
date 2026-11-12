@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" role="img" aria-label="召回的四段漏斗：精确词、近似语义、图谱邻接、向量候选">
+  <g font-family="system-ui, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="480" y="34" text-anchor="middle" font-size="14" fill="#64748b">召回不是一次相似度排序，是四道依次收窄的闸门</text>
+
+    <rect x="60" y="56" width="640" height="38" rx="6" fill="#0f766e"/>
+    <text x="80" y="81" font-size="14" font-weight="600" fill="#ffffff">① 精确词</text>
+    <text x="80" y="112" font-size="12.5" fill="#475569">全文检索（FTS5 + 中文二元组），按 IDF 折权：人人皆有的词几乎不加分</text>
+
+    <rect x="60" y="134" width="520" height="38" rx="6" fill="#0d9488"/>
+    <text x="80" y="159" font-size="14" font-weight="600" fill="#ffffff">② 近似语义</text>
+    <text x="80" y="190" font-size="12.5" fill="#475569">字符二元组余弦 + 同义词扩展；必须命中至少一个非数字实词</text>
+
+    <rect x="60" y="212" width="400" height="38" rx="6" fill="#14b8a6"/>
+    <text x="80" y="237" font-size="14" font-weight="600" fill="#ffffff">③ 图谱邻接</text>
+    <text x="80" y="268" font-size="12.5" fill="#475569">沿记忆之间的关系走一层，不递归——两层以上就是随机游走</text>
+
+    <rect x="60" y="290" width="280" height="38" rx="6" fill="#94a3b8"/>
+    <text x="80" y="315" font-size="14" font-weight="600" fill="#ffffff">④ 向量候选</text>
+    <text x="80" y="346" font-size="12.5" fill="#475569">只在词法零命中时进闸门；最多一条，标注「还没确认」</text>
+
+    <text x="480" y="386" text-anchor="middle" font-size="12" fill="#94a3b8">会话可见性过滤发生在每一段之前，不是在结果上补</text>
+  </g>
+</svg>

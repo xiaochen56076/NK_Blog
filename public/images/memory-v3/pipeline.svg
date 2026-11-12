@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 260" width="960" height="260" role="img" aria-label="从一条消息到一句回答的六段流程">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <g font-family="system-ui, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="480" y="34" text-anchor="middle" font-size="14" fill="#64748b">一条消息的旅程</text>
+
+    <g>
+      <rect x="40" y="90" width="120" height="76" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="100" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2937">消息</text>
+      <text x="100" y="144" text-anchor="middle" font-size="11.5" fill="#64748b">群里的原始输入</text>
+    </g>
+
+    <line x1="162" y1="128" x2="186" y2="128" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="190" y="90" width="120" height="76" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="250" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2937">经历</text>
+      <text x="250" y="144" text-anchor="middle" font-size="11.5" fill="#64748b">只追加的事件流</text>
+    </g>
+
+    <line x1="312" y1="128" x2="336" y2="128" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="340" y="90" width="120" height="76" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="400" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2937">整理</text>
+      <text x="400" y="144" text-anchor="middle" font-size="11.5" fill="#64748b">后台批量提炼</text>
+    </g>
+
+    <line x1="462" y1="128" x2="486" y2="128" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="490" y="90" width="120" height="76" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="550" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2937">记忆</text>
+      <text x="550" y="144" text-anchor="middle" font-size="11.5" fill="#64748b">版本·证据·有效期</text>
+    </g>
+
+    <line x1="612" y1="128" x2="636" y2="128" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="640" y="90" width="120" height="76" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="700" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2937">召回</text>
+      <text x="700" y="144" text-anchor="middle" font-size="11.5" fill="#64748b">分层检索闸门</text>
+    </g>
+
+    <line x1="762" y1="128" x2="786" y2="128" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="790" y="90" width="120" height="76" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="850" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2937">提示词</text>
+      <text x="850" y="144" text-anchor="middle" font-size="11.5" fill="#64748b">最多五条，带出处</text>
+    </g>
+
+    <text x="480" y="222" text-anchor="middle" font-size="12.5" fill="#64748b">
+      经历只追加不改 · 记忆可修正可追溯 · 索引随时能重建
+    </text>
+  </g>
+</svg>
